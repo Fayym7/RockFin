@@ -68,6 +68,22 @@ Make sure you have the following installed on your system:
 
 10. Access the application at [http://localhost:8000](http://localhost:8000) in your web browser.
 
+## Features:
+1. User Authentication: Allow users to create accounts securely.
+2. Loan Application: Enable user to apply for loans through the      app.
+3. Repayments: Allow users to make repayments for their loans.
+4. Loan Statement: Provide users with access to their past loan statements.
+5. Secure Transactions: Ensure that all transactions within the app are secure and encrypted
+
+## Formula Used
+M=(P*r*(1+r)^n)/((1+r)^n)-1)
+
+Where:
+M is the monthly payment
+P is the principal loan amount
+r is the monthly interest rate (APR divided by 12)
+n is the number of payments (loan term in months)
+
 ## Project Structure
 
 - **RocketFin**: Django project directory.
