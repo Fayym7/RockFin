@@ -75,10 +75,11 @@ Make sure you have the following installed on your system:
 4. Loan Statement: Provide users with access to their past loan statements.
 5. Secure Transactions: Ensure that all transactions within the app are secure and encrypted
 
-## Formula Used
+## Monthly due Formula Used
 M=(P*r*(1+r)^n)/((1+r)^n)-1)
 
 Where:
+
 M is the monthly payment
 
 P is the principal loan amount
