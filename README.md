@@ -31,7 +31,7 @@ Make sure you have the following installed on your system:
    python -m venv env
    source env/bin/activate   # For Linux/Mac
    # OR
-   .\env\Scripts\activate    # For Windows
+   env\Scripts\activate    # For Windows
    ```
 
 4. Install project dependencies:
@@ -39,7 +39,7 @@ Make sure you have the following installed on your system:
    pip install -r requirement.txt
    ```
 
-5. Open a seperate Terminal and start the Redis server:
+5. Open a seperate Terminal and start the Redis server(Make sure Redis is installed in your PC):
    ```bash
    redis-server
    ```
