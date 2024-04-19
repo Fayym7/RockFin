@@ -82,7 +82,7 @@
         <h1>Apply for Loan</h1>
         <form id="loanForm">
             {% csrf_token %}
-            <label for="loanAmount">Loan Amount:</label>
+            <label for="loanAmount">Loan Amount(Upto Rs. 5000 only):</label>
             <input type="number" id="loanAmount" name="loanAmount" required>
             <label for="termPeriod">Term Period (months):</label>
             <select id="termPeriod" name="termPeriod" required>
@@ -104,6 +104,14 @@
 
         loanForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const loanAmount = parseInt(document.getElementById('loanAmount').value);
+            // Check if the loan amount exceeds 5000
+            if (loanAmount > 5000) {
+                responseMessage.textContent = 'Loan amount cannot exceed 5000';
+                responseMessage.style.display = 'block';
+                return; // Prevent form submission
+            }
+            
             const formData = new FormData(loanForm);
             const response = await fetch('/api/apply-loan/', {
                 method: 'POST',
