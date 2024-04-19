@@ -39,7 +39,7 @@ Make sure you have the following installed on your system:
    pip install -r requirements.txt
    ```
 
-5. Start the Redis server:
+5. Open a seperate Terminal and start the Redis server:
    ```bash
    redis-server
    ```
@@ -49,12 +49,12 @@ Make sure you have the following installed on your system:
    python manage.py migrate
    ```
 
-7. Start Celery beat for periodic tasks:
+7. Start Celery beat for periodic tasks(New Terminal):
    ```bash
    celery -A RocketFin beat -l info
    ```
 
-8. Start Celery worker for background task processing:
+8. Start Celery worker for background task processing(New Terminal):
    ```bash
    celery -A RocketFin worker -l info
    ```
