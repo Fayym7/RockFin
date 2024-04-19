@@ -51,12 +51,12 @@ Make sure you have the following installed on your system:
 
 7. Start Celery beat for periodic tasks(New Terminal):
    ```bash
-   celery -A RocketFin beat -l info
+   celery -A RocketFins beat -l info
    ```
 
 8. Start Celery worker for background task processing(New Terminal):
    ```bash
-   celery -A RocketFin worker -l info
+   celery -A RocketFins worker -l info
    ```
 
 9. Finally, start the Django development server:
