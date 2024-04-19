@@ -91,9 +91,13 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-# Celery configuration
+# Celery configuration using redis broker
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+
+#Celery configuration for inmemory broker and result backend
+# CELERY_BROKER_URL = 'memory://'
+# CELERY_RESULT_BACKEND = 'rpc://'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
