@@ -166,7 +166,7 @@
             button.addEventListener('click', function(event) {
                 var billId = this.getAttribute('data-billid');
                 var amount = this.getAttribute('data-amount');
-                var billBlock = document.getElementById(`${billId}`);
+                var billBlock = document.getElementById(billId);
                 console.log(billBlock)
                 // Make POST request with fetch API
                 fetch('/api/make-payment/', {
