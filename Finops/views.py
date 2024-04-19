@@ -33,7 +33,7 @@ def register_user_api(request):
                 credit_score = calculate_credit_score.delay(aadhar_id)
                 if credit_score == None:
                     messages.info(request,'Aadhar Entry not found in provided CSV file')
-                return redirect('signup')
+                    return redirect('signup')
                 #log user in and redirect to settings page
                 user_login= auth.authenticate(username=name,password=password)
                 auth.login(request,user_login)
