@@ -80,8 +80,11 @@ M=(P*r*(1+r)^n)/((1+r)^n)-1)
 
 Where:
 M is the monthly payment
+
 P is the principal loan amount
+
 r is the monthly interest rate (APR divided by 12)
+
 n is the number of payments (loan term in months)
 
 ## Project Structure
