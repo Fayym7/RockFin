@@ -18,7 +18,7 @@ Make sure you have the following installed on your system:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Fayym7/RockFin.git
+   git clone -b master https://github.com/username/repository.git
    ```
 
 2. Navigate to the project directory:
