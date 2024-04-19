@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make Payment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .input-group input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn-container {
+            text-align: center;
+        }
+        .btn-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-container button:hover {
+            background-color: #0056b3;
+        }
+        .payment-container {
+            display: flex;
+        }
+        
+        .payment-block {
+            background-color: #fff;
+            padding: 20px;
+            flex: 1;
+            margin-right: 20px;
+        }
+        .payment-block h2 {
+            margin-bottom: 10px;
+        }
+        .payment-info {
+            margin-bottom: 10px;
+        }
+        .payment-info p {
+            margin: 0;
+        }
+        .payment-info button {
+            margin-top: 10px;
+        }
+        .no-loans {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <form id="paymentForm">
+                <div class="input-group">
+                    <label for="amount">Enter Amount (in Rupees):</label>
+                    <input type="text" id="amount" name="amount" placeholder="Enter amount...">
+                </div>
+                <div class="btn-container">
+                    <button type="submit">Submit</button>
+                </div>
+                <div id="paymentMessage"></div>
+            </form>
+        </div>
+        <div class="payment-container">
+        {% if repay %}
+        <div class="payment-block">
+            <h2>Upcoming Payments</h2>
+            {% for payment in repay %}
+                {% for date in payment.2 %}
+                    <div class="payment-info">
+                        <p>Loan_ID: {{ payment.3 }}</p>
+                        <p>Disbursement Date: {{ payment.0 }}</p>
+                        <p>Monthly Payment: {{ payment.1 }}</p>
+                        <p>Date: {{ date }}</p>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        
+        {% endif %}
+
+        {% if past_billing_date %}
+        <div class="payment-block">
+            <h2>Pending Payments</h2>
+            {% for bill in past_billing_date %}
+            <div class="payment-info" id="{{ bill.bill_id }}">
+                <p>Due Date: {{ bill.due_date }}</p>
+                <p>Amount to be Paid: {{ bill.amount_to_be_paid }}</p>
+                <p>Pending payments past due date</p>
+                <button class="payNow" data-billid="{{ bill.bill_id }}" data-amount="{{ bill.amount_to_be_paid }}">Pay Now</button>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="payment-block">
+            <p class="no-loans">There are no bills past due date</p>
+        </div>
+        {% endif %}
+    </div>
+    </div>
+
+    <script>
+        // Handle form submission
+        document.getElementById('paymentForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var amount = document.getElementById('amount').value;
+        
+            // Make POST request with fetch API
+            fetch('/api/make-payment/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ amount: amount })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Failed to make payment');
+                }
+            })
+            .then(data => {
+                // Display the message on the screen
+                var messageElement = document.getElementById('paymentMessage');
+                messageElement.textContent = data.message;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+        
+
+        // Handle payment button click
+        document.querySelectorAll('.payNow').forEach(button => {
+            button.addEventListener('click', function(event) {
+                var billId = this.getAttribute('data-billid');
+                var amount = this.getAttribute('data-amount');
+                var billBlock = document.getElementById(`${billId}`);
+                console.log(billBlock)
+                // Make POST request with fetch API
+                fetch('/api/make-payment/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ bill_id: billId, amount: amount })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Handle response
+                    console.log(data);
+                    if (data.success) {
+                        billBlock.remove(); // Remove the payment-info block from the DOM
+                    }
+                    // Update UI accordingly
+                    var messageElement = document.getElementById('paymentMessage');
+                messageElement.textContent = data.message;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

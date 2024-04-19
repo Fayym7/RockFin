@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Statement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .loan-block {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .loan-block h3 {
+            margin-bottom: 5px;
+        }
+        .loan-block p {
+            margin: 0;
+        }
+        .loan-details {
+            display: none;
+            background-color: #f9f9f9;
+            padding: 10px;
+        }
+        .loan-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .loan-details th, .loan-details td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .loan-details th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if loans %}
+        <h2>Loan History</h2>
+        {% for loan in loans %}
+        <div class="loan-block" data-loan-id="{{ loan.loan_id }}">
+            <h3>Disbursement Date: {{ loan.disbursement_date }}</h3>
+            <p>Loan Status: {{ loan.loan_status }}</p>
+            <p><a href="#" class="loan-details-toggle">Click here to get detailed view</a></p>
+            <div class="loan-details">
+                <h3>Loan Structure</h3>
+                <p>Date: {{ Date }}</p>
+                <p>Principal: {{ Principal }}</p>
+                <p>Interest: {{ Interest }}</p>
+                <p>Amount Paid: {{ Amount_Paid }}</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>EMI Date</th>
+                            <th>Amount Due</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for date in Upcoming_transactions.EMI_Dates %}
+                        <tr>
+                            <td>{{ date }}</td>
+                            <td>{{ Upcoming_transactions.Amount_Due }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No loans available.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        // Handle loan block click to show details
+        document.querySelectorAll('.loan-block').forEach(block => {
+            block.addEventListener('click', function() {
+                // Send POST request to the same URL with loan_id
+                var loanId = this.getAttribute('data-loan-id');
+                fetch(window.location.href, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ loan_id: loanId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Update loan details based on response
+                    var details = this.querySelector('.loan-details');
+                    console.log(data.Upcoming_transactions.EMI_Dates)
+                    console.log(data.Upcoming_transactions)
+                    details.innerHTML = `
+                        <h3>Loan Structure</h3>
+                        <p>Date: ${data.Date}</p>
+                        <p>Principal: ${data.Principal}</p>
+                        <p>Interest: ${data.Interest}</p>
+                        <p>Amount Paid: ${data.Amount_Paid}</p>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>EMI Date</th>
+                                    <th>Amount Due</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${data.Upcoming_transactions.EMI_Dates.map(date => `
+                                    <tr>
+                                        <td>${date}</td>
+                                        <td>${data.Upcoming_transactions.Amount_Due}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+                    // Toggle loan details visibility
+                    details.style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
