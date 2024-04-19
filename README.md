@@ -18,12 +18,12 @@ Make sure you have the following installed on your system:
 
 1. Clone the repository:
    ```bash
-   git clone -b master https://github.com/Fayym7/RockFin.git
+   git clone -b master https://github.com/Fayym7/RocketFins.git
    ```
 
 2. Navigate to the project directory:
    ```bash
-   cd RocketFin
+   cd RocketFins
    ```
 
 3. Create and activate a virtual environment:
