@@ -36,7 +36,7 @@ Make sure you have the following installed on your system:
 
 4. Install project dependencies:
    ```bash
-   pip install -r requirements.txt
+   pip install -r requirement.txt
    ```
 
 5. Open a seperate Terminal and start the Redis server:
