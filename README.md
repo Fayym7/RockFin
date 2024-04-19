@@ -76,7 +76,7 @@ Make sure you have the following installed on your system:
 5. Secure Transactions: Ensure that all transactions within the app are secure and encrypted
 
 ## Monthly due Formula Used
-M=(P*r*(1+r)^n)/((1+r)^n)-1)
+M=(P*r*((1+r)^n))/(((1+r)^n)-1)
 
 Where:
 
