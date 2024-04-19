@@ -50,6 +50,7 @@ class Payment(models.Model):
         return f"Payment of {self.amount} for {self.loan}"
 
 
+# NOT IN USE
 class Transaction(models.Model):
     TRANSACTION_TYPES = (
         ('DEBIT', 'Debit'),
