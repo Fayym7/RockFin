@@ -28,12 +28,12 @@ def register_user_api(request):
                 messages.info(request,'Username Taken')
                 return redirect('signup')
             else:
-                user=User.objects.create_user(username=name,email=email,password=password)
-                user.save()
                 credit_score = calculate_credit_score.delay(aadhar_id)
                 if credit_score == None:
-                    messages.info(request,'Aadhar Entry not found in provided CSV file')
+                    messages.info(request,'Aadhar ID entered cannot be found in the provided CSV file')
                     return redirect('signup')
+                user=User.objects.create_user(username=name,email=email,password=password)
+                user.save()
                 #log user in and redirect to settings page
                 user_login= auth.authenticate(username=name,password=password)
                 auth.login(request,user_login)
@@ -43,7 +43,6 @@ def register_user_api(request):
                 user_model=User.objects.get(username=name)
                 user_profile = UserProfile.objects.create(user= user, annual_income=annual_income, aadhar_id=aadhar_id, credit_score=credit_score) 
                 user_profile.save()
-                messages.info(request,'Account was created, Please login')
                 return redirect('/')
                 #log user in and redirect to settings page
                 # user_login= auth.authenticate(username=username,password=password)
@@ -70,7 +69,7 @@ def signin(request):
         if user is not None:
             auth.login(request, user)
             print('logged in')
-            return render(request, 'index.html', {'logged_in': True, 'user': user})
+            return redirect('/')
         else:
             messages.info(request, 'Invalid Credentials')
             return redirect('signin')
@@ -92,6 +91,7 @@ def apply_loan_api(request):
             return JsonResponse({'message':'Your credit score or income is below our eligibility criteria.'}, status = 400)
 
 #####################################################################################
+        #Monthly Due Calculation 
         apr = 12  # APR in percentage
         # apr_daily = round(apr / 100 / 365, 3)  # Calculate daily APR accrued
         # monthly_payment = (loan_amount * 0.03) + (apr_daily * 30 * loan_amount)
@@ -166,7 +166,7 @@ def make_payment_api(request):
             # Transaction failed due to integrity error (e.g., unique constraint violation)
             return JsonResponse({'error': 'Transaction failed. Please try again.'}, status=500)
         
-        return JsonResponse({'message': 'Amount was paid, Please Refresh to get updated Upcoming  payments'}, status=200)
+        return JsonResponse({'message': 'Amount was paid, Please Refresh to get updated Upcoming  payments', 'success': True}, status=200)
     else:
         # pending_loans = Loan.objects.filter(user=request.user, loan_status='Pending').prefetch_related('bills').all()  # 'Pending' is the status for pending loans
         # pending_loans = Loan.objects.filter(user=request.user, loan_status='Pending').prefetch_related('bills')
