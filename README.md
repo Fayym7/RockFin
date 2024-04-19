@@ -43,8 +43,8 @@ Make sure you have the following installed on your system:
    ```bash
    redis-server
    ```
-   NOTE: If you are facing problem with redis or celery, then do a quick test you can give a custom value to 'credit_score' variable in line 31 of 
-         RocketFins/views.py and skip step 6 & 7
+   NOTE: If you are facing problem with Redis or Celery initiation in your PC, then do a quick test you can give a custom value to 'credit_score' variable in line 
+   31 of RocketFins/views.py and skip step 6 & 7
 
 6. Run migrations to set up the database:
    ```bash
